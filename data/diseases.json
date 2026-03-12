@@ -1,0 +1,30 @@
+{
+  "diseases": [
+    {"name": "Measles", "r0": 15, "r0_display": "12–18", "hit": "92–94%"},
+    {"name": "Pertussis", "r0": 14.5, "r0_display": "12–17", "hit": "92–94%"},
+    {"name": "Chickenpox", "r0": 11, "r0_display": "10–12", "hit": "90–92%"},
+    {"name": "Mumps", "r0": 11, "r0_display": "10–12", "hit": "90–92%"},
+    {"name": "Norovirus", "r0": 7.2, "r0_display": "7.2 (2.1–14)", "hit": "86%"},
+    {"name": "Rubella", "r0": 6.5, "r0_display": "6–7", "hit": "83–86%"},
+    {"name": "Polio", "r0": 6, "r0_display": "5–7", "hit": "80–86%"},
+    {"name": "Smallpox", "r0": 4.75, "r0_display": "3.5–6.0", "hit": "71–83%"},
+    {"name": "HIV/AIDS", "r0": 3.5, "r0_display": "2–5", "hit": "50–80%"},
+    {"name": "SARS", "r0": 3, "r0_display": "2–4", "hit": "50–75%"},
+    {"name": "Diphtheria", "r0": 2.6, "r0_display": "2.6 (1.7–4.3)", "hit": "62%"},
+    {"name": "Common cold", "r0": 2.5, "r0_display": "2–3", "hit": "50–67%"},
+    {"name": "COVID-19", "r0": 11.45, "r0_display": "2.9–20", "hit": "65–95%"},
+    {"name": "Mpox", "r0": 2.1, "r0_display": "2.1 (1.1–2.7)", "hit": "53%"},
+    {"name": "Ebola", "r0": 1.8, "r0_display": "1.8 (1.4–1.8)", "hit": "44%"},
+    {"name": "Influenza", "r0": 1.3, "r0_display": "1.3 (1.2–1.4)", "hit": "23%"},
+    {"name": "Andes hantavirus", "r0": 1.2, "r0_display": "1.2 (0.8–1.6)", "hit": "16%"},
+    {"name": "Nipah virus", "r0": 0.5, "r0_display": "0.5", "hit": "0%"},
+    {"name": "MERS", "r0": 0.5, "r0_display": "0.5 (0.3–0.8)", "hit": "0%"}
+  ],
+  "simulation": {
+    "population": 100,
+    "days": 10,
+    "infectious_period_days": 7,
+    "contact_radius": 0.08,
+    "speed": 0.015
+  }
+}
