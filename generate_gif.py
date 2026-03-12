@@ -55,7 +55,7 @@ DISEASES = [
     {"name": "Difteria", "r0_display": "2.6", "r0": 2.6},
     {"name": "Resfriado", "r0_display": "2–3", "r0": 2.5},
     {"name": "COVID-19", "r0_display": "2.9–20", "r0": 11.45},
-    {"name": "Viruela mono", "r0_display": "2.1", "r0": 2.1},
+    {"name": "Viruela de mono", "r0_display": "2.1", "r0": 2.1},
     {"name": "Ebola", "r0_display": "1.8", "r0": 1.8},
     {"name": "Gripe", "r0_display": "1.3", "r0": 1.3},
     {"name": "Hantavirus", "r0_display": "1.2", "r0": 1.2},
