@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-Genera un GIF y video del panel completo de propagación R₀ para el README.
-Requiere: pip install numpy pillow
-Video opcional: pip install imageio imageio-ffmpeg
+Generate a GIF and video of the full R₀ propagation panel for the README.
+Requires: pip install numpy pillow
+Optional video: pip install imageio imageio-ffmpeg
 """
 
 import re
@@ -10,7 +10,7 @@ import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 from pathlib import Path
 
-# Parámetros (coinciden con index.html)
+# Parameters (match index.html)
 POPULATION = 100
 DAYS = 10
 STEPS_PER_DAY = 15
@@ -34,7 +34,7 @@ CREDIT_TEXT = "JDConejeros/R0_animation"
 GITHUB_LOGO_URL = "https://github.com/favicon.ico"
 
 def parse_r0_midpoint(r0_display: str, base_r0: float) -> float:
-    """Si r0_display es 'X-X', retorna el punto medio. Si no, retorna base_r0."""
+    """If r0_display is a range, return midpoint; otherwise base_r0."""
     m = re.match(r"^(\d+\.?\d*)\s*[-–]\s*(\d+\.?\d*)$", r0_display.strip())
     if m:
         return (float(m.group(1)) + float(m.group(2))) / 2
@@ -42,27 +42,27 @@ def parse_r0_midpoint(r0_display: str, base_r0: float) -> float:
 
 
 DISEASES = [
-    {"name": "Sarampion", "r0_display": "12–18", "r0": 15},
-    {"name": "Tos ferina", "r0_display": "12–17", "r0": 14.5},
-    {"name": "Varicela", "r0_display": "10–12", "r0": 11},
-    {"name": "Paperas", "r0_display": "10–12", "r0": 11},
+    {"name": "Measles", "r0_display": "12–18", "r0": 15},
+    {"name": "Pertussis", "r0_display": "12–17", "r0": 14.5},
+    {"name": "Chickenpox", "r0_display": "10–12", "r0": 11},
+    {"name": "Mumps", "r0_display": "10–12", "r0": 11},
     {"name": "Norovirus", "r0_display": "7.2", "r0": 7.2},
-    {"name": "Rubeola", "r0_display": "6–7", "r0": 6.5},
+    {"name": "Rubella", "r0_display": "6–7", "r0": 6.5},
     {"name": "Polio", "r0_display": "5–7", "r0": 6},
-    {"name": "Viruela", "r0_display": "3.5–6.0", "r0": 4.75},
-    {"name": "VIH/SIDA", "r0_display": "2–5", "r0": 3.5},
+    {"name": "Smallpox", "r0_display": "3.5–6.0", "r0": 4.75},
+    {"name": "HIV/AIDS", "r0_display": "2–5", "r0": 3.5},
     {"name": "SARS", "r0_display": "2–4", "r0": 3},
-    {"name": "Difteria", "r0_display": "2.6", "r0": 2.6},
-    {"name": "Resfriado", "r0_display": "2–3", "r0": 2.5},
+    {"name": "Diphtheria", "r0_display": "2.6", "r0": 2.6},
+    {"name": "Common cold", "r0_display": "2–3", "r0": 2.5},
     {"name": "COVID-19", "r0_display": "2.9–20", "r0": 11.45},
-    {"name": "Viruela de mono", "r0_display": "2.1", "r0": 2.1},
+    {"name": "Mpox", "r0_display": "2.1", "r0": 2.1},
     {"name": "Ebola", "r0_display": "1.8", "r0": 1.8},
-    {"name": "Gripe", "r0_display": "1.3", "r0": 1.3},
-    {"name": "Hantavirus", "r0_display": "1.2", "r0": 1.2},
-    {"name": "Nipah", "r0_display": "0.5", "r0": 0.5},
+    {"name": "Influenza", "r0_display": "1.3", "r0": 1.3},
+    {"name": "Andes hantavirus", "r0_display": "1.2", "r0": 1.2},
+    {"name": "Nipah virus", "r0_display": "0.5", "r0": 0.5},
     {"name": "MERS", "r0_display": "0.5", "r0": 0.5},
 ]
-# Ajustar r0 al punto medio cuando hay intervalo
+# Use midpoint R0 when display is a range
 for d in DISEASES:
     d["r0"] = parse_r0_midpoint(d["r0_display"], d["r0"])
 
@@ -154,7 +154,7 @@ def get_font(size: int, bold: bool = False):
 
 
 def load_github_logo(size: int = 20):
-    """Carga el logo de GitHub. Retorna None si falla."""
+    """Load GitHub logo. Returns None on failure."""
     try:
         import urllib.request
         from io import BytesIO
@@ -162,7 +162,7 @@ def load_github_logo(size: int = 20):
         with urllib.request.urlopen(req, timeout=5) as r:
             img = Image.open(BytesIO(r.read())).convert("RGBA")
         img = img.resize((size, size), Image.Resampling.LANCZOS)
-        # Invertir para que sea visible en fondo oscuro (blanco/gris)
+        # Invert for visibility on dark background
         arr = np.array(img)
         rgb = arr[:, :, :3]
         alpha = arr[:, :, 3:4]
@@ -174,7 +174,7 @@ def load_github_logo(size: int = 20):
 
 
 def draw_credits(draw, img, font_credit, github_logo, y_base):
-    """Dibuja créditos (logo + texto) en la parte inferior derecha, alineados verticalmente."""
+    """Draw credits (logo + text) bottom-right, vertically aligned."""
     pad_right = 20
     text = CREDIT_TEXT
     try:
@@ -208,7 +208,7 @@ def draw_cell(draw, agents, name, r0_display, day, infected, total_infected, x0,
     draw.rectangle([x0, y0, x0 + w, y0 + h], fill=(22, 27, 34), outline=(48, 54, 61))
 
     if show_final:
-        # Frame final: solo el número
+        # Final frame: count only
         draw.rectangle([x0, y0, x0 + w, y0 + h], fill=(13, 17, 23), outline=(63, 185, 80), width=2)
         text = f"{total_infected}"
         try:
@@ -243,7 +243,7 @@ def draw_cell(draw, agents, name, r0_display, day, infected, total_infected, x0,
         r0_w = len(r0_str) * 7
     draw.text((x0 + w - r0_w - 8, y0 + 4), r0_str, fill=(35, 134, 54), font=font_sm)
     if not show_final:
-        draw.text((x0 + 8, y0 + h - 22), f"Dia {day}/{days_label} | {infected} inf", fill=(139, 148, 158), font=font_sm)
+        draw.text((x0 + 8, y0 + h - 22), f"Day {day}/{days_label} | {infected} inf", fill=(139, 148, 158), font=font_sm)
 
 
 def main():
@@ -255,13 +255,13 @@ def main():
     font_lg = get_font(56)
     font_credit = get_font(12, bold=True)
 
-    # Inicializar todas las simulaciones
+    # Initialize all simulations
     sims = []
     for d in DISEASES:
         agents, tp = create_simulation(d["r0"])
         sims.append({"agents": agents, "tp": tp, "disease": d, "completed": False, "last_infected": 0, "total_ever_infected": 0})
 
-    title = "R0 - Primeros 10 dias despues del inicio del brote | 100 personas"
+    title = "R0 - First 10 days after outbreak onset | 100 people"
     github_logo = load_github_logo(18)
     credit_y = IMG_H - CREDIT_HEIGHT
 
@@ -271,7 +271,7 @@ def main():
         img = Image.new("RGB", (IMG_W, IMG_H), color=(13, 17, 23))
         draw = ImageDraw.Draw(img)
 
-        draw.text((20, 12), f"{title} | Dia {day}/{DAYS}", fill=(230, 237, 243), font=font_md_bold)
+        draw.text((20, 12), f"{title} | Day {day}/{DAYS}", fill=(230, 237, 243), font=font_md_bold)
         draw.rectangle([0, credit_y, IMG_W, IMG_H], fill=(22, 27, 34), outline=(48, 54, 61))
         draw_credits(draw, img, font_credit, github_logo, credit_y)
 
@@ -291,37 +291,37 @@ def main():
 
         frames.append(img.copy())
 
-    # Al finalizar, marcar todos como completados
+    # Mark all simulations complete
     for s in sims:
         s["completed"] = True
 
-    # Frames finales con números grandes (7 segundos)
+    # Final frames with large counts (7 seconds)
     final_frames_count = FPS * 7
     for _ in range(final_frames_count):
         img = Image.new("RGB", (IMG_W, IMG_H), color=(13, 17, 23))
         draw = ImageDraw.Draw(img)
-        draw.text((20, 12), "Infectados tras 10 dias del inicio del brote", fill=(63, 185, 80), font=font_md_bold)
+        draw.text((20, 12), "Infected after 10 days from outbreak onset", fill=(63, 185, 80), font=font_md_bold)
         draw.rectangle([0, credit_y, IMG_W, IMG_H], fill=(22, 27, 34), outline=(48, 54, 61))
         draw_credits(draw, img, font_credit, github_logo, credit_y)
         for i, s in enumerate(sims):
             col, row = i % COLS, i // COLS
             x0, y0 = 20 + col * CELL_W, 50 + row * CELL_H
-            total = s["total_ever_infected"]  # Total acumulado (infectados + recuperados)
+            total = s["total_ever_infected"]
             draw_cell(draw, s["agents"], s["disease"]["name"], s["disease"]["r0_display"], DAYS, total, total, x0, y0, CELL_W - 5, CELL_H - 5, font_sm, font_sm_bold, font_md, font_lg, show_final=True, days_label=DAYS)
         frames.append(img.copy())
 
     duration = int(1000 / FPS)
     frames[0].save(OUTPUT_GIF, save_all=True, append_images=frames[1:], duration=duration, loop=0)
-    print(f"GIF guardado en: {OUTPUT_GIF} ({len(frames)} frames)")
+    print(f"GIF saved to: {OUTPUT_GIF} ({len(frames)} frames)")
 
-    # Generar video MP4
+    # Generate MP4 video
     try:
         import imageio
         frame_arrays = [np.array(f) for f in frames]
         imageio.mimsave(str(OUTPUT_VIDEO), frame_arrays, fps=FPS)
-        print(f"Video guardado en: {OUTPUT_VIDEO}")
+        print(f"Video saved to: {OUTPUT_VIDEO}")
     except ImportError:
-        # Alternativa: ffmpeg desde línea de comandos
+        # Fallback: ffmpeg from command line
         import subprocess
         import tempfile
         tmpdir = Path(tempfile.mkdtemp())
@@ -332,9 +332,9 @@ def main():
                 "ffmpeg", "-y", "-framerate", str(FPS), "-i", str(tmpdir / "frame_%05d.png"),
                 "-c:v", "libx264", "-pix_fmt", "yuv420p", str(OUTPUT_VIDEO)
             ], check=True, capture_output=True)
-            print(f"Video guardado en: {OUTPUT_VIDEO}")
+            print(f"Video saved to: {OUTPUT_VIDEO}")
         except (FileNotFoundError, subprocess.CalledProcessError):
-            print("Para generar video: pip install imageio imageio-ffmpeg (o instalar ffmpeg)")
+            print("To generate video: pip install imageio imageio-ffmpeg (or install ffmpeg)")
         finally:
             import shutil
             shutil.rmtree(tmpdir, ignore_errors=True)
